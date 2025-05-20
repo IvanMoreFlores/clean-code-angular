@@ -9,9 +9,9 @@ import { map } from 'rxjs/operators';
 export class AuthApiRepository implements AuthRepository {
   constructor(private readonly http: HttpClient) {}
 
-  login(email: string, password: string): Observable<User> {
+  login(username: string, password: string): Observable<User> {
     return this.http
-      .post<User>('https://dummyjson.com/auth/login', { email, password })
+      .post<User>('https://dummyjson.com/auth/login', { username, password })
       .pipe(
         map((response: any) => ({
           id: response.id,

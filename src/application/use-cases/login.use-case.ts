@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 export class LoginUseCase {
   constructor(private authRepo: AuthRepository) {}
 
-  login(email: string, password: string): Observable<User> {
-    return this.authRepo.login(email, password);
+  login(username: string, password: string): Observable<User> {
+    return this.authRepo.login(username, password);
   }
 }
