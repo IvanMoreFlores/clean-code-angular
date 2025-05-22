@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Product } from '../../../domain/entities/product.entity';
 import { loadProducts } from '../../store/products/products.actions';
 import { ProductsUseCase } from '../../../application/use-cases/products.use-cases';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { CardProductComponent } from '../../components/card/product-card.component';
 
@@ -27,9 +27,7 @@ export class HomePage {
     private readonly productUseCase: ProductsUseCase,
     private readonly store: Store<{ products: { products: Product[] } }>
   ) {
-    this.products$ = this.store.select(
-      (state) => state.products.products
-    );
+    this.products$ = this.store.select((state) => state.products.products);
   }
   products: Product[] = [];
   categories: ICategories[] = [];
@@ -46,12 +44,12 @@ export class HomePage {
   async ngOnInit() {
     try {
       this.store.dispatch(loadProducts());
-      const result = this.productUseCase.getProducts();
-      const data =  this.productUseCase.getCategories();
-      // this.categories = data;
-      // this.products = result.data.products;
-      console.log(result);
-      console.log(data);
+      const result = await lastValueFrom(this.productUseCase.getProducts());
+      const data = await lastValueFrom(this.productUseCase.getCategories());
+      this.categories = data;
+      this.products = result;
+      console.log(this.categories);
+      console.log(this.products);
     } catch (error) {}
   }
 
@@ -62,9 +60,11 @@ export class HomePage {
   async onChangeInputSearch(event: Event) {
     const word = (event.target as HTMLInputElement).value;
     try {
-      const result = this.productUseCase.getSearchProduct(word);
+      const result = await lastValueFrom(
+        this.productUseCase.getSearchProduct(word)
+      );
       console.log(result);
-      // this.products = result.products;
+      this.products = result;
     } catch (error) {
       console.log('Hubo un error en onChangeInputSearch :' + error);
     }
@@ -77,11 +77,11 @@ export class HomePage {
       return;
     }
     try {
-      const result = await this.productUseCase.getProductsByCategory(
-        value
+      const result = await lastValueFrom(
+        this.productUseCase.getProductsByCategory(value)
       );
       console.log(result);
-      // this.products = result.products;
+      this.products = result;
     } catch (error) {
       console.log('Hubo un error en onSelectCategory :' + error);
     }
@@ -89,60 +89,48 @@ export class HomePage {
 
   async getAllProducts() {
     try {
-      const result = await this.productUseCase.getProducts();
+      const result = await lastValueFrom(this.productUseCase.getProducts());
       console.log(result);
-      // this.products = result.data.products;
+      this.products = result;
     } catch (error) {}
   }
 
   openModalProduct() {
+    this.statusModal = true;
     this.tbnText = 'Agregar producto';
-    const modal = document.getElementById('modalProduct');
-    if (modal) {
-      const bsModal = new (window as any).bootstrap.Modal(modal);
-      bsModal.show();
-    }
   }
 
   async onClickUpdateProduct(event: Event) {
-    // event.preventDefault();
-    // console.log(this.newProduct);
-    // try {
-    //   const result = await this.productUseCase.updateProduct(
-    //     this.newProduct.id,
-    //     JSON.stringify(this.newProduct)
-    //   );
-    //   console.log(result);
-    //   if (result) {
-    //     console.log('Producto actualizado correctamente');
-    //     this.getAllProducts();
-    //     this.newProduct = {
-    //       id: 0,
-    //       title: '',
-    //       description: '',
-    //       price: 0,
-    //       stock: 0,
-    //     };
-    //     const modal = document.getElementById('modalProduct');
-    //     if (modal) {
-    //       const bsModal = new (window as any).bootstrap.Modal(modal);
-    //       bsModal.hide();
-    //     }
-    //   } else {
-    //     alert('Error al actualizar el producto');
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    event.preventDefault();
+    console.log(this.newProduct);
+    try {
+      const result = await lastValueFrom(this.productUseCase.updateProduct(
+        this.newProduct.id,
+        JSON.stringify(this.newProduct)
+      ));
+      console.log(result);
+      if (result) {
+        console.log('Producto actualizado correctamente');
+        this.getAllProducts();
+        this.newProduct = {
+          id: 0,
+          title: '',
+          description: '',
+          price: 0,
+          stock: 0,
+        };
+        this.statusModal = false;
+      } else {
+        alert('Error al actualizar el producto');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   openModalEditProduct(product: Product) {
     this.tbnText = 'Editar producto';
-    const modal = document.getElementById('modalProduct');
-    if (modal) {
-      const bsModal = new (window as any).bootstrap.Modal(modal);
-      bsModal.show();
-    }
+    this.statusModal = true;
     this.newProduct = {
       id: product.id,
       title: product.title,
@@ -162,35 +150,37 @@ export class HomePage {
   }
 
   async onClickAddProduct(event: Event) {
-    // event.preventDefault();
-    // console.log(this.newProduct);
-    // try {
-    //   const result =  this.productUseCase.createProduct(this.newProduct);
-    //   console.log(result);
-    //   if (result) {
-    //     console.log('Producto agregado correctamente');
-    //     this.products.push(result);
-    //     this.newProduct = {
-    //       id: 0,
-    //       title: '',
-    //       description: '',
-    //       price: 0,
-    //       stock: 0,
-    //     };
-    //     const modal = document.getElementById('modalProduct');
-    //     if (modal) {
-    //       const bsModal = new (window as any).bootstrap.Modal(modal);
-    //       bsModal.hide();
-    //     }
-    //   } else {
-    //     alert('Error al agregar el producto');
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    event.preventDefault();
+    console.log(this.newProduct);
+    try {
+      const result = await lastValueFrom(
+        this.productUseCase.createProduct(this.newProduct)
+      );
+      console.log(result);
+      if (result) {
+        console.log('Producto agregado correctamente');
+        this.products.push(result);
+        this.newProduct = {
+          id: 0,
+          title: '',
+          description: '',
+          price: 0,
+          stock: 0,
+        };
+        this.statusModal = false;
+      } else {
+        alert('Error al agregar el producto');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   onDelete(product: Product) {
     return this.productUseCase.deleteProduct(product.id.toString());
+  }
+
+  closeModalProduct() {
+    this.statusModal = false;
   }
 }

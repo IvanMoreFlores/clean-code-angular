@@ -5,7 +5,7 @@ export abstract class ProductsRepository {
   abstract getProducts(): Observable<Product[]>;
   abstract getProductById(id: string): Observable<Product>;
   abstract createProduct(product: Product): Observable<Product>;
-  abstract updateProduct(product: Product): Observable<Product>;
+  abstract updateProduct(id: number, product: Product): Observable<Product>;
   abstract deleteProduct(id: string): Observable<void>;
   abstract getCategories(): Observable<any>;
   abstract getSearchProduct(word: string): Observable<Product[]>;

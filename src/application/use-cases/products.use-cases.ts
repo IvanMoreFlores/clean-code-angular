@@ -12,11 +12,11 @@ export class ProductsUseCase {
   getProductById(id: string): Observable<Product> {
     return this.productsRepo.getProductById(id);
   }
-  createProduct(product: Product): Observable<Product> {
+  createProduct(product: any): Observable<Product> {
     return this.productsRepo.createProduct(product);
   }
-  updateProduct(product: Product): Observable<Product> {
-    return this.productsRepo.updateProduct(product);
+  updateProduct(id: number, product: any): Observable<Product> {
+    return this.productsRepo.updateProduct(id, product);
   }
   deleteProduct(id: string): Observable<void> {
     return this.productsRepo.deleteProduct(id);

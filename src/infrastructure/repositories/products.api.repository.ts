@@ -21,12 +21,12 @@ export class ProductsApiRepository implements ProductsRepository {
   createProduct(product: Product): Observable<Product> {
     return this.http
       .post<Product>('https://dummyjson.com/products/add', product)
-      .pipe(map((response: any) => response.product));
+      .pipe(map((response: any) => response));
   }
-  updateProduct(product: Product): Observable<Product> {
+  updateProduct(id: number, product: Product): Observable<Product> {
     return this.http
-      .put<Product>(`https://dummyjson.com/products/${product.id}`, product)
-      .pipe(map((response: any) => response.product));
+      .put<Product>(`https://dummyjson.com/products/${id}`, product)
+      .pipe(map((response: any) => response));
   }
   deleteProduct(id: string): Observable<void> {
     return this.http
@@ -36,17 +36,16 @@ export class ProductsApiRepository implements ProductsRepository {
   getCategories(): Observable<any> {
     return this.http
       .get<any>('https://dummyjson.com/products/categories')
-      .pipe(map((response: any) => response.categories));
+      .pipe(map((response: any) => response));
   }
   getSearchProduct(word: string): Observable<Product[]> {
     return this.http
       .get<Product[]>(`https://dummyjson.com/products/search?q=${word}`)
       .pipe(map((response: any) => response.products));
   }
-
-    getProductByCategory(category: string): Observable<Product[]> {
-        return this.http
-        .get<Product[]>(`https://dummyjson.com/products/category/${category}`)
-        .pipe(map((response: any) => response.products));
-    }
+  getProductByCategory(category: string): Observable<Product[]> {
+    return this.http
+      .get<Product[]>(`https://dummyjson.com/products/category/${category}`)
+      .pipe(map((response: any) => response.products));
+  }
 }
