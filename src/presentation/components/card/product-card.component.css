@@ -1,0 +1,20 @@
+.card {
+  transition: trasnform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.counter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}

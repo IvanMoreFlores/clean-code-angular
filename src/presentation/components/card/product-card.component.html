@@ -1,0 +1,22 @@
+<div class="card shadow-sm">
+    <img class="card-img-top" [src]="product.thumbnail" [alt]="product.title">
+    <div class="card-body">
+        <h2 class="card-title">{{product.title}}</h2>
+        <p class="card-text">{{product.description}}</p>
+        <p class="text-primary fw-bold">Precio: ${{product.price}} <span
+                class="text-danger">(-{{product.discountPercentage}}%)</span></p>
+        <p class="text-warning fw-bold" [ngClass]="{'text-danger': product.stock < 10}">Stock: {{product.stock}}</p>
+        <button class="btn btn-primary w-100" (click)="onClickBuy()">Agregar al carrito</button>
+        <br />
+        <br />
+        <button class="btn btn-dark w-100" (click)="onUpdate(product)">Editar producto</button>
+        <br />
+        <br />
+        <button class="btn btn-danger w-100" (click)="onDelete(product)">Elimar producto</button>
+        <div *ngIf="(product$ | async) as product" class="counter">
+            <button (click)="decreaseCount()" class="btn btn-danger">-</button>
+            <p>{{(product$ | async)?.count || 0}}</p>
+            <button (click)="increaseCount()" class="btn btn-primary">+</button>
+        </div>
+    </div>
+</div>

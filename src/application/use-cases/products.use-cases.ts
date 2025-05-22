@@ -21,4 +21,17 @@ export class ProductsUseCase {
   deleteProduct(id: string): Observable<void> {
     return this.productsRepo.deleteProduct(id);
   }
+
+  getCategories(): Observable<any> {
+    return this.productsRepo.getCategories();
+  }
+
+  getSearchProduct(word: string): Observable<Product[]> {
+    return this.productsRepo.getSearchProduct(word);
+  }
+
+  getProductsByCategory(category: string): Observable<Product[]> {
+    return this.productsRepo.getProductByCategory(category);
+  }
+  
 }

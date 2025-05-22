@@ -1,3 +1,62 @@
-<main>
-    <h2>Bienvenido</h2>
+<app-navbar></app-navbar>
+<main class="container mt-4">
+    <div class="div-header">
+        <div class="mb-3">
+            <button (click)="openModalProduct()" class="btn btn-primary">Agregar producto</button>
+        </div>
+        <div class="mb-3">
+            <p class="fs-3">Buscar por </p>
+            <input (input)="onChangeInputSearch($event)" type="text" class="form-control"
+                placeholder="Buscar producto...">
+        </div>
+        <div>
+            <p class="fs-3">Categoria </p>
+            <select class="form-control" (change)="onSelectCategory($event)">
+                <option selected>.: Todos :.</option>
+                <option *ngFor="let item of categories" [value]="item.slug">{{item.name}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4 col-sm-6 col-12" *ngFor="let item of products">
+            <app-product-card [product]="item" (buyProduct)="onClickBuy($event)"
+                (editProduct)="openModalEditProduct($event)" (deleteProduct)="onDelete($event)" />
+        </div>
+    </div>
+    <div class="modal fade" id="modalProduct" tabindex="-1" aria-labelledby="modalProduct" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Agregar producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form #productForm="ngForm" (ngSubmit)="onClick($event)">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Titulo</label>
+                            <input type="text" class="form-control" id="title" name="title"
+                                [(ngModel)]="newProduct.title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripcion</label>
+                            <input type="text" class="form-control" id="description" name="description"
+                                [(ngModel)]="newProduct.description">
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Precio</label>
+                            <input type="number" class="form-control" id="price" name="price"
+                                [(ngModel)]="newProduct.price">
+                        </div>
+                        <div class="mb-3">
+                            <label for="stock" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="stock" name="stock"
+                                [(ngModel)]="newProduct.stock">
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{tbnText}}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>

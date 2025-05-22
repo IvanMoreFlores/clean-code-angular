@@ -7,61 +7,46 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsApiRepository implements ProductsRepository {
-    constructor(private readonly http: HttpClient) {}
-    getProducts(): Observable<Product[]> {
+  constructor(private readonly http: HttpClient) {}
+  getProducts(): Observable<Product[]> {
+    return this.http
+      .get<Product[]>('https://dummyjson.com/products')
+      .pipe(map((response: any) => response.products));
+  }
+  getProductById(id: string): Observable<Product> {
+    return this.http
+      .get<Product>(`https://dummyjson.com/products/${id}`)
+      .pipe(map((response: any) => response.product));
+  }
+  createProduct(product: Product): Observable<Product> {
+    return this.http
+      .post<Product>('https://dummyjson.com/products/add', product)
+      .pipe(map((response: any) => response.product));
+  }
+  updateProduct(product: Product): Observable<Product> {
+    return this.http
+      .put<Product>(`https://dummyjson.com/products/${product.id}`, product)
+      .pipe(map((response: any) => response.product));
+  }
+  deleteProduct(id: string): Observable<void> {
+    return this.http
+      .delete<void>(`https://dummyjson.com/products/${id}`)
+      .pipe(map(() => {}));
+  }
+  getCategories(): Observable<any> {
+    return this.http
+      .get<any>('https://dummyjson.com/products/categories')
+      .pipe(map((response: any) => response.categories));
+  }
+  getSearchProduct(word: string): Observable<Product[]> {
+    return this.http
+      .get<Product[]>(`https://dummyjson.com/products/search?q=${word}`)
+      .pipe(map((response: any) => response.products));
+  }
+
+    getProductByCategory(category: string): Observable<Product[]> {
         return this.http
-            .get<Product[]>('https://dummyjson.com/products')
-            .pipe(
-                map((response: any) => response.products)
-            );
-    }
-    getProductById(id: string): Observable<Product> {
-        return this.http
-            .get<Product>(`https://dummyjson.com/products/${id}`)
-            .pipe(
-                map((response: any) => response.product)
-            );
-    }
-    createProduct(product: Product): Observable<Product> {
-        return this.http
-            .post<Product>('https://dummyjson.com/products/add', product)
-            .pipe(
-                map((response: any) => response.product)
-            );
-    }
-    updateProduct(product: Product): Observable<Product> {
-        return this.http
-            .put<Product>(`https://dummyjson.com/products/${product.id}`, product)
-            .pipe(
-                map((response: any) => response.product)
-            );
-    }
-    deleteProduct(id: string): Observable<void> {
-        return this.http
-            .delete<void>(`https://dummyjson.com/products/${id}`)
-            .pipe(
-                map(() => {})
-            );
-    }
-    getProductsByCategory(category: string): Observable<Product[]> {
-        return this.http
-            .get<Product[]>(`https://dummyjson.com/products/category/${category}`)
-            .pipe(
-                map((response: any) => response.products)
-            );
-    }
-    getProductsBySearch(query: string): Observable<Product[]> {
-        return this.http
-            .get<Product[]>(`https://dummyjson.com/products/search?q=${query}`)
-            .pipe(
-                map((response: any) => response.products)
-            );
-    }
-    getProductsByBrand(brand: string): Observable<Product[]> {
-        return this.http
-            .get<Product[]>(`https://dummyjson.com/products/brand/${brand}`)
-            .pipe(
-                map((response: any) => response.products)
-            );
+        .get<Product[]>(`https://dummyjson.com/products/category/${category}`)
+        .pipe(map((response: any) => response.products));
     }
 }
