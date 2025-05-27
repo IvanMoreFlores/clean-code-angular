@@ -25,13 +25,13 @@ export class NavbarComponent {
     this.totalCount$ = this.store.select(selectTotalCount);
     this.productCount$ = this.store.select((state) => state.products.length);
     this.name =
-      localStorage.getItem('firstName') +
+      (localStorage.getItem('firstName') ?? '') +
       ' ' +
-      localStorage.getItem('lastName');
+      (localStorage.getItem('lastName') ?? '');
   }
 
   onClickCart() {
-    this.router.navigate(['/cart-shopping']);
+    this.router.navigate(['/cart']);
   }
 
   onClickLogout() {

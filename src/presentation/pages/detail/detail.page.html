@@ -1,0 +1,64 @@
+<app-navbar></app-navbar>
+
+<main class="max-w-7xl mx-auto mt-6 px-4">
+  <h2 class="text-2xl font-semibold mb-4">Detalles del producto</h2>
+
+  <div class="grid md:grid-cols-2 gap-8">
+    <!-- Galería de imágenes -->
+    <div>
+      <img src="{{imageFirst}}" alt="Producto" class="rounded-lg w-full mb-4">
+      <div class="flex gap-2 overflow-x-auto">
+        <!-- thumbnails -->
+        <img (click)="onClickImage(PRODUCT.images[0])" src="{{PRODUCT.images[0]}}" class="w-20 h-20 object-cover rounded cursor-pointer border" />
+        <img (click)="onClickImage(PRODUCT.images[1])" src="{{PRODUCT.images[1]}}" class="w-20 h-20 object-cover rounded cursor-pointer border" />
+        <!-- ... -->
+      </div>
+    </div>
+
+    <!-- Información del producto -->
+    <div>
+      <h3 class="text-3xl font-bold mb-2">{{PRODUCT.title}}</h3>
+      <p class="text-gray-500 mb-2">Categoría: <span class="font-medium">{{PRODUCT.category}}</span></p>
+      <p class="text-gray-500 mb-2">Marca: <span class="font-medium">{{PRODUCT.brand}}</span></p>
+      <p class="text-gray-700 mb-4">{{PRODUCT.description}}</p>
+
+      <div class="mb-4">
+        <span class="text-2xl font-bold text-green-600">${{ PRODUCT.price }}</span>
+        <span class="ml-2 line-through text-gray-400">${{ (PRODUCT.price / (1 - PRODUCT.discountPercentage / 100)).toFixed(2) }}</span>
+        <span class="ml-2 text-sm text-red-500">-{{ PRODUCT.discountPercentage }}%</span>
+      </div>
+
+      <div class="mb-4">
+        <span class="text-yellow-500">★</span> {{ PRODUCT.rating }} | Stock: {{ PRODUCT.stock }}
+      </div>
+
+      <div class="text-sm mb-2">SKU: {{ PRODUCT.sku }}</div>
+      <div class="text-sm mb-2">Peso: {{ PRODUCT.weight }} kg</div>
+      <div class="text-sm mb-2">Dimensiones: {{ PRODUCT.dimensions.width }}x{{ PRODUCT.dimensions.height }}x{{ PRODUCT.dimensions.depth }} cm</div>
+      <div class="text-sm mb-2">Disponibilidad: <span class="font-semibold">{{ PRODUCT.availabilityStatus }}</span></div>
+      <div class="text-sm mb-2">Garantía: {{ PRODUCT.warrantyInformation }}</div>
+      <div class="text-sm mb-2">Política de devolución: {{ PRODUCT.returnPolicy }}</div>
+      <div class="text-sm mb-2">Mínimo de compra: {{ PRODUCT.minimumOrderQuantity }}</div>
+      <div class="text-sm mb-4">Información de envío: {{ PRODUCT.shippingInformation }}</div>
+
+      <button class="mt-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+        Agregar al carrito
+      </button>
+    </div>
+  </div>
+
+  <!-- Reseñas -->
+  <div class="mt-10">
+    <h4 class="text-xl font-semibold mb-4">Opiniones de los usuarios</h4>
+    <div class="space-y-4">
+      <div class="border p-4 rounded" *ngFor="let review of PRODUCT.reviews">
+        <div class="flex items-center justify-between mb-1">
+          <span class="font-medium">{{ review.reviewerName }}</span>
+          <span class="text-yellow-500">★ {{ review.rating }}</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-1">{{ review.comment }}</p>
+        <p class="text-xs text-gray-400">{{ review.date }}</p>
+      </div>
+    </div>
+  </div>
+</main>

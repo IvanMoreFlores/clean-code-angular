@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { LoginUseCase } from '../../../application/use-cases/login.use-case';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../components/button/button.component';
@@ -7,10 +12,9 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [ButtonComponent, CommonModule,ReactiveFormsModule],
+  imports: [ButtonComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  
 })
 export class LoginPage {
   form: FormGroup;
@@ -33,6 +37,11 @@ export class LoginPage {
       this.loginUseCase.login('emilys', password).subscribe(
         (user) => {
           console.log('Login successful', user);
+          localStorage.setItem('accessToken', user.accessToken);
+          localStorage.setItem('refreshToken', user.refreshToken);
+          localStorage.setItem('firstName', user.firstName);
+          localStorage.setItem('lastName', user.lastName);
+          localStorage.setItem('email', user.email);
           this.errorMessage = null; // Clear any previous error message
           this.route.navigate(['/home']); // Navigate to the home page
           // Handle successful login (e.g., navigate to another page)

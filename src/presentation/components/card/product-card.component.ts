@@ -3,9 +3,15 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, take } from 'rxjs';
 import { Product } from '../../../domain/entities/product.entity';
-import { addProduct, decreaseProduct, deleteProduct, increaseProduct } from '../../store/cart/product.actions';
+import {
+  addProduct,
+  decreaseProduct,
+  deleteProduct,
+  increaseProduct,
+} from '../../store/cart/product.actions';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
@@ -22,7 +28,10 @@ export class CardProductComponent {
   product$!: Observable<Product | undefined>;
   //Pruct$ -> Prodcuto del store redux - si(IProduct) No(undefined)
 
-  constructor(private readonly store: Store<{ products: Product[] }>) {}
+  constructor(
+    private readonly router: Router,
+    private readonly store: Store<{ products: Product[] }>
+  ) {}
 
   ngOnInit(): void {
     this.product$ = this.store.pipe(
@@ -69,6 +78,14 @@ export class CardProductComponent {
       if (product && product.count === 1) {
         this.store.dispatch(deleteProduct({ id: this.product.id }));
       }
+    });
+  }
+
+  onDetail(product: Product) {
+    this.router.navigate(['product/detail', product.id], {
+      queryParams: {
+        product: JSON.stringify(product),
+      },
     });
   }
 }
